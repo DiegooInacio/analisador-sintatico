@@ -1,0 +1,115 @@
+GRAMÁTICA
+PROG → public class id { public static void id ( ) { CMDS } }
+CMDS → CMD CMDS
+CMDS → ε
+CMD → DECL
+CMD → ATRIB
+CMD → IF_STMT
+DECL → TIPO id ;
+TIPO → int
+TIPO → float
+TIPO → char
+ATRIB → id = E ;
+IF_STMT → if ( COND ) { CMDS } SENAO
+SENAO → else { CMDS }
+SENAO → ε
+COND → E OP_REL E
+OP_REL → ==
+OP_REL → !=
+OP_REL → <
+OP_REL → >
+E → T E'
+E' → + T E'
+E' → - T E'
+E' → ε
+T → F T'
+T' → * F T'
+T' → / F T'
+T' → ε
+F → ( E )
+F → id
+F → num
+
+CONJUNTOS FIRST E FOLLOW
+Não-terminal | FIRST                           | FOLLOW                            
+-------------+---------------------------------+-----------------------------------
+PROG         | { public }                      | { $ }                             
+CMDS         | { char, float, id, if, int, ε } | { } }                             
+CMD          | { char, float, id, if, int }    | { char, float, id, if, int, } }   
+DECL         | { char, float, int }            | { char, float, id, if, int, } }   
+TIPO         | { char, float, int }            | { id }                            
+ATRIB        | { id }                          | { char, float, id, if, int, } }   
+IF_STMT      | { if }                          | { char, float, id, if, int, } }   
+SENAO        | { else, ε }                     | { char, float, id, if, int, } }   
+COND         | { (, id, num }                  | { ) }                             
+OP_REL       | { !=, <, ==, > }                | { (, id, num }                    
+E            | { (, id, num }                  | { !=, ), ;, <, ==, > }            
+E'           | { +, -, ε }                     | { !=, ), ;, <, ==, > }            
+T            | { (, id, num }                  | { !=, ), +, -, ;, <, ==, > }      
+T'           | { *, /, ε }                     | { !=, ), +, -, ;, <, ==, > }      
+F            | { (, id, num }                  | { !=, ), *, +, -, /, ;, <, ==, > }
+
+TABELA PREDITIVA M (células preenchidas; demais células = erro)
+Não-terminal | Entrada | Produção                                                     
+-------------+---------+--------------------------------------------------------------
+PROG         | public  | PROG → public class id { public static void id ( ) { CMDS } }
+CMDS         | char    | CMDS → CMD CMDS                                              
+CMDS         | float   | CMDS → CMD CMDS                                              
+CMDS         | id      | CMDS → CMD CMDS                                              
+CMDS         | if      | CMDS → CMD CMDS                                              
+CMDS         | int     | CMDS → CMD CMDS                                              
+CMDS         | }       | CMDS → ε                                                     
+CMD          | char    | CMD → DECL                                                   
+CMD          | float   | CMD → DECL                                                   
+CMD          | id      | CMD → ATRIB                                                  
+CMD          | if      | CMD → IF_STMT                                                
+CMD          | int     | CMD → DECL                                                   
+DECL         | char    | DECL → TIPO id ;                                             
+DECL         | float   | DECL → TIPO id ;                                             
+DECL         | int     | DECL → TIPO id ;                                             
+TIPO         | char    | TIPO → char                                                  
+TIPO         | float   | TIPO → float                                                 
+TIPO         | int     | TIPO → int                                                   
+ATRIB        | id      | ATRIB → id = E ;                                             
+IF_STMT      | if      | IF_STMT → if ( COND ) { CMDS } SENAO                         
+SENAO        | char    | SENAO → ε                                                    
+SENAO        | else    | SENAO → else { CMDS }                                        
+SENAO        | float   | SENAO → ε                                                    
+SENAO        | id      | SENAO → ε                                                    
+SENAO        | if      | SENAO → ε                                                    
+SENAO        | int     | SENAO → ε                                                    
+SENAO        | }       | SENAO → ε                                                    
+COND         | (       | COND → E OP_REL E                                            
+COND         | id      | COND → E OP_REL E                                            
+COND         | num     | COND → E OP_REL E                                            
+OP_REL       | !=      | OP_REL → !=                                                  
+OP_REL       | <       | OP_REL → <                                                   
+OP_REL       | ==      | OP_REL → ==                                                  
+OP_REL       | >       | OP_REL → >                                                   
+E            | (       | E → T E'                                                     
+E            | id      | E → T E'                                                     
+E            | num     | E → T E'                                                     
+E'           | !=      | E' → ε                                                       
+E'           | )       | E' → ε                                                       
+E'           | +       | E' → + T E'                                                  
+E'           | -       | E' → - T E'                                                  
+E'           | ;       | E' → ε                                                       
+E'           | <       | E' → ε                                                       
+E'           | ==      | E' → ε                                                       
+E'           | >       | E' → ε                                                       
+T            | (       | T → F T'                                                     
+T            | id      | T → F T'                                                     
+T            | num     | T → F T'                                                     
+T'           | !=      | T' → ε                                                       
+T'           | )       | T' → ε                                                       
+T'           | *       | T' → * F T'                                                  
+T'           | +       | T' → ε                                                       
+T'           | -       | T' → ε                                                       
+T'           | /       | T' → / F T'                                                  
+T'           | ;       | T' → ε                                                       
+T'           | <       | T' → ε                                                       
+T'           | ==      | T' → ε                                                       
+T'           | >       | T' → ε                                                       
+F            | (       | F → ( E )                                                    
+F            | id      | F → id                                                       
+F            | num     | F → num                                                      

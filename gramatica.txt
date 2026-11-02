@@ -1,0 +1,16 @@
+# ε representa a produção vazia. O primeiro não-terminal é o símbolo inicial.
+PROG -> public class id { public static void id ( ) { CMDS } }
+CMDS -> CMD CMDS | ε
+CMD -> DECL | ATRIB | IF_STMT
+DECL -> TIPO id ;
+TIPO -> int | float | char
+ATRIB -> id = E ;
+IF_STMT -> if ( COND ) { CMDS } SENAO
+SENAO -> else { CMDS } | ε
+COND -> E OP_REL E
+OP_REL -> == | != | < | >
+E -> T E'
+E' -> + T E' | - T E' | ε
+T -> F T'
+T' -> * F T' | / F T' | ε
+F -> ( E ) | id | num
